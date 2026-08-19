@@ -1,0 +1,16 @@
+# compiled simulator
+hazard_sim
+*.o
+*.out
+
+# python
+__pycache__/
+*.pyc
+
+# office lock files
+~$*.docx
+~$*.xlsx
+
+# os
+.DS_Store
+Thumbs.db
