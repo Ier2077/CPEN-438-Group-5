@@ -2,8 +2,12 @@
 
 Forwarding, Stalling and Branch Resolution in a COCOBOD Yield-Estimation Datapath
 
-**Team:** _[fill]_
-**Members:** _[fill]_
+**Team:** _Group 5_
+**Members:** 
+Ishaan Bhardwaj - 11004272
+Samia Soleimani - 11010910
+Nyavor Cyril    - 11023595
+Prince Philips  - 11218951
 **Seed:** 16993 — provisional, see the seed field of the project proposal
 
 ## Repository layout
@@ -28,6 +32,3 @@ python3 tests/hazard_test_vectors.py --sim ./hazard_sim
 ./hazard_sim datasets/cocobod_seed16993.asm --compare
 ```
 
-> M4: expand this section so any result in the report can be reproduced from
-> this file alone by someone who has never seen the project. That is the
-> rubric wording, and it is your defence question.
