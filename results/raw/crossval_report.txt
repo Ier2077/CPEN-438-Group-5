@@ -1,0 +1,5 @@
+CROSS-VALIDATION: PASS
+signals: 11 (PC, ForwardA, ForwardB, ForwardC, ForwardD, Stall, Flush, ALU_EX, RegWrite_WB, WriteReg, WriteData)
+rows: C=25 Logisim=25
+skip: 0
+mismatches: 0
