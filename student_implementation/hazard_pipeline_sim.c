@@ -326,8 +326,8 @@ static Result run(Instr *prog, int n, int forwarding, int hdu, FILE *trace, int 
     int pc = 0;
 
     if (trace)
-        fprintf(trace, "cycle,IF,ID,EX,MEM,WB,ForwardA,ForwardB,ForwardC,ForwardD,"
-                       "Stall,Flush,note\n");
+        fprintf(trace, "cycle,PC,IF,ID,EX,MEM,WB,ForwardA,ForwardB,ForwardC,ForwardD,"
+                       "Stall,Flush,ALU_EX,RegWrite_WB,WriteReg,WriteData,note\n");
 
     for (long cyc = 1; cyc <= MAX_CYCLES; cyc++) {
 
@@ -336,6 +336,7 @@ static Result run(Instr *prog, int n, int forwarding, int hdu, FILE *trace, int 
 
         IFID  n_ifid  = {0}; IDEX  n_idex  = {0};
         EXMEM n_exmem = {0}; MEMWB n_memwb = {0};
+        int trace_pc = pc;
 
         int fwdA = 0, fwdB = 0, fwdC = 0, fwdD = 0;
         int stall = 0, flush = 0;
@@ -524,6 +525,7 @@ static Result run(Instr *prog, int n, int forwarding, int hdu, FILE *trace, int 
         /* ---------------- trace ------------------------------------------- */
         if (trace) {
             char sIF[8], sID[8], sEX[8], sME[8], sWB[8];
+            char sAlu[24], sRegWrite[8], sWriteReg[8], sWriteData[24];
             snprintf(sIF, 8, "%s", fetched >= 0 ? "" : "-");
             if (fetched >= 0) snprintf(sIF, 8, "%d", prog[fetched].origIndex);
             snprintf(sID, 8, "%s", ifid.valid  ? "" : "-");
@@ -535,10 +537,24 @@ static Result run(Instr *prog, int n, int forwarding, int hdu, FILE *trace, int 
             snprintf(sWB, 8, "%s", memwb.valid ? "" : "bub");
             if (memwb.valid) snprintf(sWB, 8, "%d", memwb.ins->origIndex);
 
-            fprintf(trace, "%ld,%s,%s,%s,%s,%s,%02d,%02d,%d,%d,%d,%d,\"%s\"\n",
-                    cyc, sIF, sID, sEX, sME, sWB,
+            if (idex.valid) snprintf(sAlu, sizeof sAlu, "%d", n_exmem.aluout);
+            else snprintf(sAlu, sizeof sAlu, "-");
+            if (memwb.valid) {
+                int write_data = memwb.ins->memRead ? memwb.memdata : memwb.aluout;
+                snprintf(sRegWrite, sizeof sRegWrite, "%d", memwb.ins->regWrite);
+                snprintf(sWriteReg, sizeof sWriteReg, "%d", memwb.ins->wreg);
+                snprintf(sWriteData, sizeof sWriteData, "%d", write_data);
+            } else {
+                snprintf(sRegWrite, sizeof sRegWrite, "-");
+                snprintf(sWriteReg, sizeof sWriteReg, "-");
+                snprintf(sWriteData, sizeof sWriteData, "-");
+            }
+
+            fprintf(trace, "%ld,%d,%s,%s,%s,%s,%s,%02d,%02d,%d,%d,%d,%d,%s,%s,%s,%s,\"%s\"\n",
+                    cyc, trace_pc, sIF, sID, sEX, sME, sWB,
                     fwdA == 2 ? 10 : fwdA, fwdB == 2 ? 10 : fwdB,
-                    fwdC, fwdD, stall, flush, note);
+                    fwdC, fwdD, stall, flush, sAlu, sRegWrite, sWriteReg,
+                    sWriteData, note);
         }
         if (verbose && note[0]) printf("  cycle %4ld : %s\n", cyc, note);
 

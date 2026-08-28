@@ -35,6 +35,8 @@ SRC = os.path.join(ROOT, "src")
 DATA = os.path.join(ROOT, "datasets")
 RES = os.path.join(ROOT, "results")
 TESTS = os.path.join(ROOT, "tests")
+SIM_SRC = os.path.join(ROOT, "student_implementation", "hazard_pipeline_sim.c")
+SIM_BIN = os.path.join(ROOT, "hazard_sim")
 
 
 def sh(cmd, cwd=None):
@@ -246,6 +248,8 @@ def main():
     ap.add_argument("--drawn-on", default="",
                     help="date the provisional seed was drawn, e.g. 2026-08-19")
     ap.add_argument("--no-word", action="store_true")
+    ap.add_argument("--no-report", action="store_true",
+                    help="skip Markdown report regeneration when report templates are absent")
     args = ap.parse_args()
 
     seed = args.seed if args.seed else derive_seed(args.seed_from)
@@ -280,15 +284,15 @@ def main():
 
     print("[2/5] building simulator")
     sh(["gcc", "-O2", "-Wall", "-Wextra", "-o", "hazard_sim",
-        "hazard_pipeline_sim.c"], cwd=SRC)
+        SIM_SRC], cwd=ROOT)
 
     print("[3/5] running comparison + test vectors")
     asm = os.path.join(DATA, f"cocobod_seed{seed}.asm")
-    out = sh([os.path.join(SRC, "hazard_sim"), asm, "--compare"], cwd=RES)
+    out = sh([SIM_BIN, asm, "--compare"], cwd=RES)
     open(os.path.join(RES, f"run_seed{seed}.txt"), "w").write(out)
 
     tv = subprocess.run([sys.executable, "hazard_test_vectors.py",
-                         "--sim", os.path.join(SRC, "hazard_sim")],
+                         "--sim", SIM_BIN],
                         cwd=TESTS, capture_output=True, text=True)
     open(os.path.join(RES, "test_vectors.txt"), "w").write(tv.stdout)
     negative_ok = "0 failed" in tv.stdout
@@ -302,36 +306,50 @@ def main():
         print("      *** CROSS-VALIDATION FAILED -- do not submit ***")
         sys.exit(1)
 
-    print("[4/5] rewriting the Week 2 report results section")
-    head = open(os.path.join(DOCS, "week2_report.head.md")).read()
-    tail = open(os.path.join(DOCS, "week2_report.tail.md")).read()
-    body = render_results(d, seed, args.team, args.status, negative_ok)
-    head = head.replace("<!-- RESULTS:BEGIN -->\n<!-- RESULTS:END -->", body)
-    head = re.sub(r"seed 4381", f"seed {seed}", head)
-    open(os.path.join(DOCS, "week2_report.md"), "w").write(head + "\n---\n" + tail)
+    if args.no_report:
+        print("[4/5] skipped Markdown report rebuild (--no-report)")
+    else:
+        head_path = os.path.join(DOCS, "week2_report.head.md")
+        tail_path = os.path.join(DOCS, "week2_report.tail.md")
+        if not (os.path.exists(head_path) and os.path.exists(tail_path)):
+            print("[4/5] skipped Markdown report rebuild (report templates not found)")
+        else:
+            print("[4/5] rewriting the Week 2 report results section")
+            head = open(head_path).read()
+            tail = open(tail_path).read()
+            body = render_results(d, seed, args.team, args.status, negative_ok)
+            head = head.replace("<!-- RESULTS:BEGIN -->\n<!-- RESULTS:END -->", body)
+            head = re.sub(r"seed 4381", f"seed {seed}", head)
+            open(os.path.join(DOCS, "week2_report.md"), "w").write(head + "\n---\n" + tail)
 
-    # propagate the seed into the other documents
-    for fn in ("00_START_HERE.md", "week1_proposal.md", "week2_report.md"):
-        p = os.path.join(DOCS, fn)
-        t = open(p).read()
-        t = t.replace("cocobod_seed4381", f"cocobod_seed{seed}")
-        t = re.sub(r"\bseed 4381\b", f"seed {seed}", t)
-        t = t.replace("--seed 4381", f"--seed {seed}")
-        t = t.replace("<SEED>", str(seed))
-        t = t.replace("<SEED-DERIVATION>", derivation)
-        if args.seed_from:
-            t = t.replace("<team id + member student numbers>", args.seed_from)
-        if args.status == "official" and fn == "week1_proposal.md":
-            t = re.sub(r"\| \*\*Assigned seed\*\* \|.*?\|\n",
-                       f"| **Assigned seed** | **{seed}** "
-                       f"(instructor-assigned, Part I §7). |\n", t, flags=re.S)
-        open(p, "w").write(t)
+            # propagate the seed into the other documents
+            for fn in ("00_START_HERE.md", "week1_proposal.md", "week2_report.md"):
+                p = os.path.join(DOCS, fn)
+                if not os.path.exists(p):
+                    continue
+                t = open(p).read()
+                t = t.replace("cocobod_seed4381", f"cocobod_seed{seed}")
+                t = re.sub(r"\bseed 4381\b", f"seed {seed}", t)
+                t = t.replace("--seed 4381", f"--seed {seed}")
+                t = t.replace("<SEED>", str(seed))
+                t = t.replace("<SEED-DERIVATION>", derivation)
+                if args.seed_from:
+                    t = t.replace("<team id + member student numbers>", args.seed_from)
+                if args.status == "official" and fn == "week1_proposal.md":
+                    t = re.sub(r"\| \*\*Assigned seed\*\* \|.*?\|\n",
+                               f"| **Assigned seed** | **{seed}** "
+                               f"(instructor-assigned, Part I §7). |\n", t, flags=re.S)
+                open(p, "w").write(t)
 
     if args.no_word:
         print("[5/5] skipped Word rebuild (--no-word)")
         return
     print("[5/5] rebuilding Word documents")
-    sh([sys.executable, "build_word.py"], cwd=os.path.join(ROOT, "word"))
+    word_dir = os.path.join(ROOT, "word")
+    if not os.path.exists(word_dir):
+        print("[5/5] skipped Word rebuild (word/ directory not found)")
+        return
+    sh([sys.executable, "build_word.py"], cwd=word_dir)
     print("\ndone. Review docs/week2_report.md, then commit and tag.")
 
 

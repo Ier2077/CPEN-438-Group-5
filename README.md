@@ -32,3 +32,11 @@ python3 tests/hazard_test_vectors.py --sim ./hazard_sim
 ./hazard_sim datasets/cocobod_seed16993.asm --compare
 ```
 
+Generate the Logisim memory images from the seeded program:
+
+```bash
+python3 src/gen_hardware_images.py \
+	--program datasets/cocobod_seed16993.hex \
+	--outdir hardware/images
+```
+
