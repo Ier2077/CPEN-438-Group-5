@@ -1,0 +1,45 @@
+==========================================================================
+ PROJECT 3 -- HAND-DERIVED HAZARD TEST VECTORS
+ every expected value below was derived by hand before running the sim
+==========================================================================
+
+V1  immediate RAW, distance 1 -> EX/MEM forward, zero stalls
+  rationale: Back-to-back dependent ALU ops. Forwarding must resolve every one of them with no stall at all. If this vector stalls, the forwarding unit is not firing.
+  RESULT: PASS   cycles=8  load-use stalls=0  branch stalls=0  flushes=0
+
+V2  RAW, distance 2 -> MEM/WB forward, zero stalls
+  rationale: The producer is two slots back. With a write-first-half / read-second-half register file this is still NOT visible in ID, so the MEM/WB path must supply it. A pipeline that only implements EX/MEM forwarding fails here.
+  RESULT: PASS   cycles=7  load-use stalls=0  branch stalls=0  flushes=0
+
+V3  LOAD-USE -> exactly ONE stall, forwarding cannot help
+  rationale: The one hazard forwarding cannot fix. The load's data leaves memory at the END of MEM; the consumer wants it at the START of its EX. Exactly one bubble, never zero and never two.
+  RESULT: PASS   cycles=8  load-use stalls=1  branch stalls=0  flushes=0
+
+V4  BRANCH TAKEN -> 1 branch-data stall + 1 flush
+  rationale: Branch resolved in ID. Its second operand is produced by the instruction immediately before it (still in EX), so one stall. Once taken, the instruction already fetched behind it is wrong and must be flushed: one further cycle. The skipped instruction must never write its register.
+  RESULT: PASS   cycles=10  load-use stalls=0  branch stalls=1  flushes=1
+
+V5  BRANCH NOT TAKEN -> 1 branch-data stall, NO flush
+  rationale: Same shape as V4 but the comparison fails. The fall-through instruction must execute and there must be no flush cycle. A pipeline that flushes unconditionally passes V4 and fails here.
+  RESULT: PASS   cycles=10  load-use stalls=0  branch stalls=1  flushes=0
+
+V6  FORWARDING PRIORITY -- the most recent producer must win
+  rationale: Two instructions write the SAME register back to back. At the consumer's EX, both EX/MEM and MEM/WB match. EX/MEM is the newer value and must take priority. Getting this backwards passes V1 and V2 and silently returns the STALE value here. This is the bug the instructor notes say will be probed at the defence.
+  RESULT: PASS   cycles=7  load-use stalls=0  branch stalls=0  flushes=0
+
+V7  SW reads rt as a SOURCE -- hazard on store data
+  rationale: A hazard-detection unit that only checks rs misses this. The store's data operand comes from the immediately preceding load, so it is a genuine load-use hazard and must stall.
+  RESULT: PASS   cycles=8  load-use stalls=1  branch stalls=0  flushes=0
+
+==========================================================================
+ NEGATIVE TEST -- disable the hazard-detection unit and confirm the
+ load-use case is caught rather than silently mis-forwarded
+==========================================================================
+  RESULT: PASS -- the guard fired:
+    *** DETECTED: cycle 5 -- the value in EX/MEM belongs to a LOAD (instr 1) whose data does not exist until the END of MEM.
+        Forwarding it to instr 2 would silently produce a WRONG result.
+        This is exactly the error the hazard-detection unit exists to prevent.
+
+==========================================================================
+ 8 passed, 0 failed
+==========================================================================

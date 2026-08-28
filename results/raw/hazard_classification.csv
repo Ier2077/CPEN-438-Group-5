@@ -1,0 +1,20 @@
+cycle,consumer_instr,producer_instr,classification,detail,cost_cycles
+4,1,0,"RAW forwarded EX/MEM->EX","operand A (rs)",0
+5,2,0,"RAW forwarded MEM/WB->EX","operand A (rs)",0
+5,3,2,"LOAD-USE  stall required","LOAD-USE stall: instr 3 needs R22 from LW at instr 2",1
+7,3,2,"RAW forwarded MEM/WB->EX","operand B (rt)",0
+9,5,3,"RAW forwarded MEM/WB->EX","operand A (rs)",0
+11,7,5,"RAW forwarded MEM/WB->EX","operand A (rs)",0
+12,8,7,"RAW forwarded EX/MEM->EX","operand A (rs)",0
+13,9,8,"RAW forwarded EX/MEM->EX","operand A (rs)",0
+14,10,9,"RAW forwarded EX/MEM->EX","operand A (rs)",0
+14,10,8,"RAW forwarded MEM/WB->EX","operand B (rt)",0
+15,11,10,"RAW forwarded EX/MEM->EX","operand A (rs)",0
+16,12,11,"RAW forwarded EX/MEM->EX","operand A (rs)",0
+16,13,12,"BRANCH-DATA stall required","BRANCH stall: instr 12 in EX still producing R10",1
+17,13,12,"RAW forwarded EX/MEM->ID","branch operand rs",0
+18,13,12,"RAW forwarded MEM/WB->EX","operand A (rs)",0
+20,15,14,"RAW forwarded EX/MEM->EX","operand B (rt)",0
+21,16,14,"RAW forwarded MEM/WB->EX","operand A (rs)",0
+22,17,16,"RAW forwarded EX/MEM->EX","operand A (rs)",0
+23,18,17,"RAW forwarded EX/MEM->EX","operand B (rt)",0
