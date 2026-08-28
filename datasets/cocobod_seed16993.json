@@ -1,0 +1,53 @@
+{
+  "seed": 16993,
+  "registers": {
+    "BASE": 17,
+    "RAIN": 15,
+    "FERT": 22,
+    "AGE": 21,
+    "T1": 8,
+    "T2": 9,
+    "T3": 19,
+    "T4": 6,
+    "T5": 11,
+    "T6": 23,
+    "YIELD": 13,
+    "THRESH": 12,
+    "FLAG": 10
+  },
+  "data": {
+    "base_addr": 20,
+    "rain_weight": 6,
+    "fert_weight": 5,
+    "age_penalty": 1,
+    "yield_ceiling": 833
+  },
+  "instruction_count": 19,
+  "expected_hazard_inventory": {
+    "load_use_hazards": 1,
+    "conditional_branches": 1,
+    "note": "RAW counts are produced by the simulator's classifier, not asserted here -- the team must derive them by hand first and then check against the simulator."
+  },
+  "team": "TEAM-07",
+  "machine_code": [
+    "0x20110014",
+    "0x8e2f0000",
+    "0x8e360004",
+    "0x01f64020",
+    "0x8e350008",
+    "0x2109001e",
+    "0x200c0341",
+    "0x01359820",
+    "0x2266ffff",
+    "0x00c95822",
+    "0x0166b824",
+    "0x22ed0000",
+    "0x01ac502a",
+    "0x11400001",
+    "0x218d0000",
+    "0xae2d000c",
+    "0x21a80010",
+    "0x010d4820",
+    "0xae290010"
+  ]
+}
