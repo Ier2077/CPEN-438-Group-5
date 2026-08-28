@@ -1,0 +1,21 @@
+{
+  "mode": "baseline",
+  "forwarding_enabled": 0,
+  "hazard_units_enabled": 0,
+  "cycles": 47,
+  "instructions_committed": 43,
+  "useful_instructions": 19,
+  "nops_executed": 24,
+  "stalls_load_use": 0,
+  "stalls_branch": 0,
+  "flush_cycles": 0,
+  "forwards_A_EXMEM": 0,
+  "forwards_A_MEMWB": 0,
+  "forwards_B_EXMEM": 0,
+  "forwards_B_MEMWB": 0,
+  "forwards_branch_comparator": 0,
+  "branches_taken": 0,
+  "branches_not_taken": 1,
+  "CPI_all_instructions": 1.0930,
+  "CPI_useful_instructions": 2.4737
+}

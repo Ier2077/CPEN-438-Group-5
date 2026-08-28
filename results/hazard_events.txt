@@ -1,0 +1,19 @@
+cycle 4  FORWARD  ForwardA=EX/MEM(10)  producer_pc=0x0000 -> consumer_pc=0x0004  reg=R17
+cycle 5  FORWARD  ForwardA=MEM/WB(01)  producer_pc=0x0000 -> consumer_pc=0x0008  reg=R17
+cycle 5  STALL    LOAD-USE  at pc=0x000c (bubble inserted into ID/EX)
+cycle 7  FORWARD  ForwardB=MEM/WB(01)  producer_pc=0x0008 -> consumer_pc=0x000c  reg=R22
+cycle 9  FORWARD  ForwardA=MEM/WB(01)  producer_pc=0x000c -> consumer_pc=0x0014  reg=R8
+cycle 11  FORWARD  ForwardA=MEM/WB(01)  producer_pc=0x0014 -> consumer_pc=0x001c  reg=R9
+cycle 12  FORWARD  ForwardA=EX/MEM(10)  producer_pc=0x001c -> consumer_pc=0x0020  reg=R19
+cycle 13  FORWARD  ForwardA=EX/MEM(10)  producer_pc=0x0020 -> consumer_pc=0x0024  reg=R6
+cycle 14  FORWARD  ForwardA=EX/MEM(10)  producer_pc=0x0024 -> consumer_pc=0x0028  reg=R11
+cycle 14  FORWARD  ForwardB=MEM/WB(01)  producer_pc=0x0020 -> consumer_pc=0x0028  reg=R6
+cycle 15  FORWARD  ForwardA=EX/MEM(10)  producer_pc=0x0028 -> consumer_pc=0x002c  reg=R23
+cycle 16  FORWARD  ForwardA=EX/MEM(10)  producer_pc=0x002c -> consumer_pc=0x0030  reg=R13
+cycle 16  STALL    BRANCH    at pc=0x0034 (bubble inserted into ID/EX)
+cycle 17  FORWARD  ForwardC/D (branch comparator <- EX/MEM)  producer_pc=0x0030 -> pc=0x0034
+cycle 18  FORWARD  ForwardA=MEM/WB(01)  producer_pc=0x0030 -> consumer_pc=0x0034  reg=R10
+cycle 20  FORWARD  ForwardB=EX/MEM(10)  producer_pc=0x0038 -> consumer_pc=0x003c  reg=R13
+cycle 21  FORWARD  ForwardA=MEM/WB(01)  producer_pc=0x0038 -> consumer_pc=0x0040  reg=R13
+cycle 22  FORWARD  ForwardA=EX/MEM(10)  producer_pc=0x0040 -> consumer_pc=0x0044  reg=R8
+cycle 23  FORWARD  ForwardB=EX/MEM(10)  producer_pc=0x0044 -> consumer_pc=0x0048  reg=R9

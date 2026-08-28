@@ -1,0 +1,27 @@
+cycle |        IF         |        ID         |        EX         |        MEM        |        WB         | Forward   | control   |
+------+-------------------+-------------------+-------------------+-------------------+-------------------+-----------+-----------+
+    1 | ADDI R17,R0,20    | --                | --                | --                | --                | A=0 B=0 | -         | -    
+    2 | LW   R15,0(R17)   | ADDI R17,R0,20    | --                | --                | --                | A=0 B=0 | -         | -    
+    3 | LW   R22,4(R17)   | LW   R15,0(R17)   | ADDI R17,R0,20    | --                | --                | A=0 B=0 | -         | -    
+    4 | ADD  R8,R15,R22   | LW   R22,4(R17)   | LW   R15,0(R17)   | ADDI R17,R0,20    | --                | A=2 B=0 | -         | -    
+    5 | ADD  R8,R15,R22   | ADD  R8,R15,R22   | LW   R22,4(R17)   | LW   R15,0(R17)   | ADDI R17,R0,20    | A=1 B=0 | STALL(LU) | -    
+    6 | LW   R21,8(R17)   | ADD  R8,R15,R22   | --                | LW   R22,4(R17)   | LW   R15,0(R17)   | A=0 B=0 | -         | -    
+    7 | ADDI R9,R8,30     | LW   R21,8(R17)   | ADD  R8,R15,R22   | --                | LW   R22,4(R17)   | A=0 B=1 | -         | -    
+    8 | ADDI R12,R0,833   | ADDI R9,R8,30     | LW   R21,8(R17)   | ADD  R8,R15,R22   | --                | A=0 B=0 | -         | -    
+    9 | ADD  R19,R9,R21   | ADDI R12,R0,833   | ADDI R9,R8,30     | LW   R21,8(R17)   | ADD  R8,R15,R22   | A=1 B=0 | -         | -    
+   10 | ADDI R6,R19,-1    | ADD  R19,R9,R21   | ADDI R12,R0,833   | ADDI R9,R8,30     | LW   R21,8(R17)   | A=0 B=0 | -         | -    
+   11 | SUB  R11,R6,R9    | ADDI R6,R19,-1    | ADD  R19,R9,R21   | ADDI R12,R0,833   | ADDI R9,R8,30     | A=1 B=0 | -         | -    
+   12 | AND  R23,R11,R6   | SUB  R11,R6,R9    | ADDI R6,R19,-1    | ADD  R19,R9,R21   | ADDI R12,R0,833   | A=2 B=0 | -         | -    
+   13 | ADDI R13,R23,0    | AND  R23,R11,R6   | SUB  R11,R6,R9    | ADDI R6,R19,-1    | ADD  R19,R9,R21   | A=2 B=0 | -         | -    
+   14 | SLT  R10,R13,R12  | ADDI R13,R23,0    | AND  R23,R11,R6   | SUB  R11,R6,R9    | ADDI R6,R19,-1    | A=2 B=1 | -         | -    
+   15 | BEQ  R10,R0,1     | SLT  R10,R13,R12  | ADDI R13,R23,0    | AND  R23,R11,R6   | SUB  R11,R6,R9    | A=2 B=0 | -         | -    
+   16 | BEQ  R10,R0,1     | BEQ  R10,R0,1     | SLT  R10,R13,R12  | ADDI R13,R23,0    | AND  R23,R11,R6   | A=2 B=0 | STALL(BR) | -    
+   17 | --                | BEQ  R10,R0,1     | --                | SLT  R10,R13,R12  | ADDI R13,R23,0    | A=0 B=0 | -         | FLUSH
+   18 | SW   R13,12(R17)  | --                | BEQ  R10,R0,1     | --                | SLT  R10,R13,R12  | A=1 B=0 | -         | -    
+   19 | ADDI R8,R13,16    | SW   R13,12(R17)  | --                | BEQ  R10,R0,1     | --                | A=0 B=0 | -         | -    
+   20 | ADD  R9,R8,R13    | ADDI R8,R13,16    | SW   R13,12(R17)  | --                | BEQ  R10,R0,1     | A=0 B=0 | -         | -    
+   21 | SW   R9,16(R17)   | ADD  R9,R8,R13    | ADDI R8,R13,16    | SW   R13,12(R17)  | --                | A=0 B=0 | -         | -    
+   22 | --                | SW   R9,16(R17)   | ADD  R9,R8,R13    | ADDI R8,R13,16    | SW   R13,12(R17)  | A=2 B=0 | -         | -    
+   23 | --                | --                | SW   R9,16(R17)   | ADD  R9,R8,R13    | ADDI R8,R13,16    | A=0 B=2 | -         | -    
+   24 | --                | --                | --                | SW   R9,16(R17)   | ADD  R9,R8,R13    | A=0 B=0 | -         | -    
+   25 | --                | --                | --                | --                | SW   R9,16(R17)   | A=0 B=0 | -         | -    

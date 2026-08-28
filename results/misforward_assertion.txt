@@ -1,0 +1,4 @@
+Command: hazard_sim <program> --mode hazard --no-hdu --allow-mis-forward
+
+MIS-FORWARD DETECTED at cycle 6: EX/MEM holds LW to R22 (pc=0x0008) and the forwarding unit selected it for the instruction at pc=0x000c. The EX/MEM latch holds that load's ADDRESS, not its data. A load-use hazard reached EX without a stall: the hazard-detection unit is disabled or broken.
+  (--allow-mis-forward given: continuing so the silently wrong result can be shown)

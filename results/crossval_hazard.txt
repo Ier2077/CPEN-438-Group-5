@@ -1,0 +1,11 @@
+CYCLE-BY-CYCLE CROSS-VALIDATION
+======================================================================
+A: sim/ (this kit)                results/percycle_hazard.csv
+B: week2 golden sim               results/w2_trace_hazard.csv
+columns compared: IF, ID, EX, MEM, WB, ForwardA, ForwardB, ForwardC, ForwardD, Stall, Flush
+alignment offset: 0
+index remap:      none
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+25 cycles compared across 11 columns
+RESULT: PASS -- the two traces agree on every compared cell
