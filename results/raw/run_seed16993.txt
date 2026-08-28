@@ -1,0 +1,66 @@
+=====================================================================
+ GhanaCore-5 hazard simulator   --  /home/claude/p3/datasets/cocobod_seed16993.asm
+ source instructions        : 19
+ Project-2 NOP-padded length: 43  (24 NOPs inserted by the assembler)
+=====================================================================
+
+--- MODE: baseline (Project 2: no forwarding, NOP-padded) -----------
+
+--- MODE: hazard  (Project 3: forwarding + HDU, zero NOPs) ----------
+
+=========================== RESULTS =================================
+                                     baseline     hazard-handling
+  total clock cycles                      47              25
+  instructions retired (incl NOP)         43              19
+  useful instructions retired             19              19
+  load-use stall cycles                    0               1
+  branch-data stall cycles                 0               1
+  control flush cycles                     0               0
+  forwards via EX/MEM -> EX              n/a               9
+  forwards via MEM/WB -> EX              n/a               7
+  forwards via EX/MEM -> ID              n/a               1
+  ---------------------------------------------------------------
+  CPI (useful instructions)           2.4737          1.3158
+  CPI (all retired instructions)      1.0930          1.3158
+  speedup (cycles baseline/hazard)                    1.8800
+  cycles saved                                            22
+  ---------------------------------------------------------------
+  CROSS-VALIDATION: architectural state IDENTICAL (0 mismatching words)
+=====================================================================
+
+---------------------- HAZARD CLASSIFICATION TABLE -------------------
+ cycle  consumer  producer  classification                  cost
+ ---------------------------------------------------------------------
+     4         1         0  RAW forwarded EX/MEM->EX           0
+     5         2         0  RAW forwarded MEM/WB->EX           0
+     5         3         2  LOAD-USE  stall required           1
+     7         3         2  RAW forwarded MEM/WB->EX           0
+     9         5         3  RAW forwarded MEM/WB->EX           0
+    11         7         5  RAW forwarded MEM/WB->EX           0
+    12         8         7  RAW forwarded EX/MEM->EX           0
+    13         9         8  RAW forwarded EX/MEM->EX           0
+    14        10         9  RAW forwarded EX/MEM->EX           0
+    14        10         8  RAW forwarded MEM/WB->EX           0
+    15        11        10  RAW forwarded EX/MEM->EX           0
+    16        12        11  RAW forwarded EX/MEM->EX           0
+    16        13        12  BRANCH-DATA stall required         1
+    17        13        12  RAW forwarded EX/MEM->ID           0
+    18        13        12  RAW forwarded MEM/WB->EX           0
+    20        15        14  RAW forwarded EX/MEM->EX           0
+    21        16        14  RAW forwarded MEM/WB->EX           0
+    22        17        16  RAW forwarded EX/MEM->EX           0
+    23        18        17  RAW forwarded EX/MEM->EX           0
+ ---------------------------------------------------------------------
+ total events: 19
+
+  final architectural state (baseline)
+    non-zero registers : R6=728 R8=849 R9=1682 R10=1 R11=269 R12=833 
+                         R13=833 R15=196 R17=20 R19=729 R21=270 R22=233 
+                         R23=8 
+
+  final architectural state (hazard-handling)
+    non-zero registers : R6=728 R8=849 R9=1682 R10=1 R11=269 R12=833 
+                         R13=833 R15=196 R17=20 R19=729 R21=270 R22=233 
+                         R23=8 
+
+ wrote trace_baseline.csv, trace_hazard.csv, hazard_classification.csv
