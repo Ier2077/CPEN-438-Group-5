@@ -1,0 +1,43 @@
+LOGISIM SUBCIRCUITS vs GOLDEN SIMULATOR, CYCLE BY CYCLE
+==============================================================================
+circuit file : logisim/GhanaCore5_HazardUnits.circ
+stimulus     : results/unit_stimulus.csv (25 cycles of the assigned COCOBOD routine)
+
+cycle 4: ForwardC -- circuit says 1, simulator says 0
+cycle 5: ForwardC -- circuit says 1, simulator says 0
+cycle 6: ForwardD -- circuit says 1, simulator says 0
+cycle 8: ForwardC -- circuit says 1, simulator says 0
+cycle 10: ForwardC -- circuit says 1, simulator says 0
+cycle 13: ForwardD -- circuit says 1, simulator says 0
+cycle 20: ForwardC -- circuit says 1, simulator says 0
+cycle  ForwardA ForwardB  Stall BranchStall FwdC FwdD   verdict
+------------------------------------------------------------------
+    1     00       00       0     0           0    0    ok
+    2     00       00       0     0           0    0    ok
+    3     00       00       0     0           0    0    ok
+    4     10       00       0     0           1    0    MISMATCH ForwardC
+    5     01       00       1     0           1    0    MISMATCH ForwardC
+    6     00       00       0     0           0    1    MISMATCH ForwardD
+    7     00       01       0     0           0    0    ok
+    8     00       00       0     0           1    0    MISMATCH ForwardC
+    9     01       00       0     0           0    0    ok
+   10     00       00       0     0           1    0    MISMATCH ForwardC
+   11     01       00       0     0           0    0    ok
+   12     10       00       0     0           0    0    ok
+   13     10       00       0     0           0    1    MISMATCH ForwardD
+   14     10       01       0     0           0    0    ok
+   15     10       00       0     0           0    0    ok
+   16     10       00       0     1           0    0    ok
+   17     00       00       0     0           1    0    ok
+   18     01       00       0     0           0    0    ok
+   19     00       00       0     0           0    0    ok
+   20     00       10       0     0           1    0    MISMATCH ForwardC
+   21     01       00       0     0           0    0    ok
+   22     10       00       0     0           0    0    ok
+   23     00       10       0     0           0    0    ok
+   24     00       00       0     0           0    0    ok
+   25     00       00       0     0           0    0    ok
+
+==============================================================================
+25 cycles compared
+RESULT: FAIL -- 7 mismatching cycle(s)

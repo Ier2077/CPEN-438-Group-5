@@ -1,0 +1,21 @@
+LOGISIM CIRCUIT CHECK  --  logisim/GhanaCore5_HazardUnits.circ
+========================================================================
+
+CIRCUIT: Forwarding_Unit
+  48 gates, 24 inputs, 4 outputs
+  netlist extraction: every gate port lands on a wire
+  RESULT: PASS -- 3000 random vectors match the Week 1 truth table
+
+CIRCUIT: Hazard_Detection_Unit
+  23 gates, 19 inputs, 1 outputs
+  netlist extraction: every gate port lands on a wire
+  RESULT: PASS -- 3000 random vectors match the Week 1 truth table
+
+CIRCUIT: Branch_Forward_Stall
+  51 gates, 26 inputs, 3 outputs
+  netlist extraction: every gate port lands on a wire
+  RESULT: PASS -- 3000 random vectors match the Week 1 equation, ForwardC/D ungated
+          (does not match the IsBranch-gated variant: 180 differing vectors)
+
+========================================================================
+OVERALL: PASS
