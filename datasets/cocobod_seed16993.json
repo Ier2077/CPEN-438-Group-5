@@ -28,7 +28,7 @@
     "conditional_branches": 1,
     "note": "RAW counts are produced by the simulator's classifier, not asserted here -- the team must derive them by hand first and then check against the simulator."
   },
-  "team": "TEAM-07",
+  "team": "TEAM-UNSET",
   "machine_code": [
     "0x20110014",
     "0x8e2f0000",

@@ -1,6 +1,6 @@
 ; COCOBOD regional cocoa-yield estimation routine
 ; CPEN 438 Project 3 -- Hazard Watch
-; team=TEAM-07  seed=16993  instructions=19
+; team=TEAM-UNSET  seed=16993  instructions=19
 ; yield = f(rainfall, fertiliser, tree_age), clamped to a ceiling
 ;
 ; register map: BASE=R17, RAIN=R15, FERT=R22, AGE=R21, T1=R8, T2=R9, T3=R19, T4=R6, T5=R11, T6=R23, YIELD=R13, THRESH=R12, FLAG=R10
