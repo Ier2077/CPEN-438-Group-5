@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project source="4.1.0" version="1.0">
+This file is intended to be loaded by Logisim-evolution v4.1.0(https://github.com/logisim-evolution/).
+
   <lib desc="#Wiring" name="0">
     <tool name="Pin">
       <a name="appearance" val="classic"/>
@@ -19,7 +21,7 @@
   <lib desc="#Soc" name="12"/>
   <main name="Forwarding_Unit"/>
   <options>
-    <a name="gateUndefined" val="error"/>
+    <a name="gateUndefined" val="ignore"/>
     <a name="simlimit" val="1000"/>
     <a name="simrand" val="0"/>
   </options>
@@ -408,7 +410,7 @@
     <comp lib="1" loc="(980,780)" name="AND Gate"><a name="size" val="50"/><a name="inputs" val="2"/></comp>
     <comp lib="1" loc="(1170,780)" name="AND Gate"><a name="size" val="50"/><a name="inputs" val="2"/></comp>
     <comp lib="0" loc="(1280,780)" name="Pin"><a name="appearance" val="NewPins"/><a name="facing" val="west"/><a name="type" val="output"/><a name="label" val="ForwardD"/></comp>
-    <wire from="(40,220)" to="(300,0)"/>
+    <wire from="(40,220)" to="(300,-10)"/>
     <wire from="(40,500)" to="(300,10)"/>
     <wire from="(40,240)" to="(300,20)"/>
     <wire from="(40,520)" to="(300,40)"/>
